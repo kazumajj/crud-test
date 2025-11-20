@@ -38,7 +38,7 @@ const items: MenuItem[] = [
         getItem('Alex', '5'),
     ]),
     getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('退出登录', '/login', <FileOutlined />),
 ];
 
 const App: React.FC = () => {
@@ -56,7 +56,7 @@ const App: React.FC = () => {
         setOpenkeys([openKeys[openKeys.length-1]])
     }
     return (
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{ minHeight: '100vh'}}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="demo-logo-vertical" />
                 <Menu theme="dark" defaultSelectedKeys={['/p']} mode="inline" items={items} 
