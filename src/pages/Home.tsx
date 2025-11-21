@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../style/App.scss'
 import {
     DesktopOutlined,
@@ -8,7 +8,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, message, theme } from 'antd';
 import { useNavigate, Outlet } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -30,13 +30,8 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('栏目 1', '/page1', <PieChartOutlined />),
-    getItem('栏目 2', '/page2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
-    ]),
+    getItem('图书管理', '/page1', <PieChartOutlined />),//这里边的栏目1是指的显示内容，sub1，3，4，5指的是key
+    getItem('图书查询', '/re', <DesktopOutlined />),
     getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
     getItem('退出登录', '/login', <FileOutlined />),
 ];
@@ -48,12 +43,27 @@ const App: React.FC = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const menuClick = (e: { key: string }) => {
-        console.log('点击了', e.key)
-        navigate(e.key)
-    }
     const handleChange = (openKeys: string[]) => {
         setOpenkeys([openKeys[openKeys.length-1]])
+    }
+    useEffect(()=>{
+        if(!localStorage.getItem("my_token"))
+        {
+            navigate('/login')
+            alert("请先完成登录")
+        }
+    },[navigate])
+    const menuClick=(e:{key:string})=>{
+        if(e.key==="/login")
+        {
+            localStorage.removeItem("my_role")
+            localStorage.removeItem("my_token")
+            message.success("退出登录成功")
+            navigate("/login")
+        }
+        else{
+            navigate(e.key)
+        }
     }
     return (
         <Layout style={{ minHeight: '100vh'}}>

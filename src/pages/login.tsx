@@ -2,6 +2,7 @@ import React, { useState, type ChangeEvent } from 'react';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import { loginApi } from '../Api/log';
+import { useNavigate } from 'react-router-dom';
 
 type FieldType = {
     username?: string;
@@ -21,6 +22,7 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
 const Login: React.FC = function () {
     const [usernameVal, setUsenameVal] = useState("")
     const [userPassword, setUserPassword] = useState("")
+    const navigate=useNavigate()
     const gotoLogin = async () => {
         console.log("用户名和密码是", usernameVal, userPassword)
         //验证是否有空值
@@ -28,13 +30,29 @@ const Login: React.FC = function () {
             message.error("请填写完整信息")
             return
         }
-       const response= await loginApi(
+        const response:LoginApires= await loginApi(
             {
                 username: usernameVal,
                 password: userPassword
             }
         )
-    }
+        const { code, message:msg, data } = response;
+        if(code!==200)
+        {
+            message.error(msg||"登录失败")
+            return
+        }
+        const token=data?.token
+        const role=data?.role
+        if(token){
+            localStorage.setItem("my_token",token)
+            localStorage.setItem("my_role",role)
+            message.success("登录成功")
+            navigate("/")
+        } else {
+            message.error("登录失败，未返回 token")
+        }
+    } 
     return (
         <Form
             name="basic"

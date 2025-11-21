@@ -1,5 +1,5 @@
 import request from './request'
-export const loginApi = (data: LoginApireq)=>{
+export const loginApi = async(data: LoginApireq):Promise<LoginApires>=>{
     return request(
         {
             url:'/login',
